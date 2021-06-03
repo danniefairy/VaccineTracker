@@ -1,0 +1,62 @@
+{
+    "Parameters": {
+      "KeyAlert": {
+        "Description": "The EC2 Key Pair to allow SSH access to the instance",
+        "Type": "AWS::EC2::KeyPair::KeyName"
+      }
+    },
+    "Resources": {
+      "Ec2Instance": {
+        "Type": "AWS::EC2::Instance",
+        "Properties": {
+          "SecurityGroups": [
+            {
+              "Ref": "SecurityGroupExample"
+            }
+          ],
+          "KeyName": {
+            "Ref": "KeyAlert"
+          },
+          "ImageId": "ami-f6035893",
+          "InstanceType": "t2.micro",
+          "UserData": {
+                "Fn::Base64": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "#!/bin/bash\n",
+                            "echo \">>>> Starting boostraping <<<<\"\n",
+                            "echo \"Update yum\"\n",
+                            "yum update -y\n",
+                            "echo \"Install dependency\"",
+                            "pip install requests\n",
+                            "pip install bs4\n",
+                            "pip install lxml\n"
+                        ]
+                    ]
+                }
+            }
+        }
+      },
+      "SecurityGroupExample": {
+        "Type": "AWS::EC2::SecurityGroup",
+        "Properties": {
+          "GroupDescription": "this is an example",
+          "SecurityGroupIngress": [
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "22",
+              "ToPort": "22",
+              "CidrIp": "0.0.0.0/0"
+            },
+            {
+                "IpProtocol": "tcp",
+                "FromPort": "80",
+                "ToPort": "80",
+                "CidrIp": "0.0.0.0/0"
+            }
+          ]
+        }
+      }
+    }
+}

@@ -1,0 +1,1 @@
+*/30 * * * * python ~/crawler.py >> ~/vaccine_alert.log
