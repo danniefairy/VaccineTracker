@@ -1,4 +1,4 @@
-# Vaccine Alert
+# Vaccine Tracker
 
 ## Create key for EC2
 `aws ec2 create-key-pair --key-name KeyAlert --query 'KeyMaterial' --output text > key-alert.pem`
