@@ -17,7 +17,13 @@ if "COVID-19" in res.text or "疫苗接種" in res.text:
 	raw = res.find("div", {"id": "date"}).contents
 	date = raw[0].split(":")[1]
 	current_date = datetime.today().strftime('%Y/%m/%d')
-	if current_date == date:		
+	if current_date == date:
+		with open("prev_content.txt", "rb") as f:
+			prev_content = f.readlines()
+		if prev_content == hash(res.text):
+			exit
+		with open("prev_cotent.txt", "rb") as f:
+			r.write(hash(res.text))
 
 		mail_content = res.text
 		#The mail addresses and password
@@ -28,8 +34,7 @@ if "COVID-19" in res.text or "疫苗接種" in res.text:
 		message = MIMEMultipart()
 		message['From'] = sender_address
 		message['To'] = receiver_address
-		message['Subject'] = 'A Vaccine alert sent by Dannie.'   #The subject line
-		#The body and the attachments for the mail
+		message['Subject'] = 'Vaccine Tracker Notification'
 		message.attach(MIMEText(mail_content.encode('utf-8'), 'plain'))
 		#Create SMTP session for sending the mail
 		session = smtplib.SMTP('smtp.gmail.com', 587) #use gmail with port
